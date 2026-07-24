@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oquíron — Saldo Meta Ads</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0e1a;--sidebar:#0d1220;--surface:#111827;--surface2:#161d2e;--border:#1e2a3a;--border2:#243040;--text:#e2e8f0;--text-dim:#94a3b8;--text-muted:#4b5870;--green:#10b981;--green-dim:#064e35;--yellow:#f59e0b;--yellow-dim:#3d2600;--red:#f43f5e;--red-dim:#3d0a14;--blue:#3b82f6;--blue-dim:#0d2348;--accent:#10b981;--sidebar-w:220px}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar-w);background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:20;padding:28px 0 24px}
+.sidebar-logo{padding:0 20px 28px;border-bottom:1px solid var(--border)}
+.sidebar-logo-name{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.sidebar-logo-name span{color:var(--accent)}
+.sidebar-logo-sub{font-size:10px;color:var(--text-muted);margin-top:3px;text-transform:uppercase;letter-spacing:1px}
+.sidebar-nav{padding:20px 12px;flex:1}
+.nav-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);padding:0 8px;margin-bottom:8px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;color:var(--text-dim);font-size:13px;font-weight:500;transition:all .15s;margin-bottom:2px}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--green-dim);color:var(--green)}
+.nav-icon{font-size:15px;width:20px;text-align:center}
+.sidebar-bottom{padding:16px 20px 0;border-top:1px solid var(--border)}
+.update-info{font-size:10px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;line-height:1.6}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:5px;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
+.topbar{padding:20px 28px 0;display:flex;align-items:flex-end;justify-content:space-between}
+.topbar-title{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--text)}
+.topbar-sub{font-size:12px;color:var(--text-muted);margin-top:3px}
+.topbar-badge{font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;border:1px solid var(--border2);color:var(--text-dim);font-family:'JetBrains Mono',monospace}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:20px 28px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0}
+.kpi.ok::after{background:var(--green)}.kpi.warn::after{background:var(--yellow)}.kpi.bad::after{background:var(--red)}.kpi.neu::after{background:var(--blue)}.kpi.total::after{background:var(--text-muted)}
+.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:8px}
+.kpi-value{font-size:26px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1;color:var(--text)}
+.kpi-value.ok{color:var(--green)}.kpi-value.warn{color:var(--yellow)}.kpi-value.bad{color:var(--red)}
+.content{padding:0 28px 28px;flex:1}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:20px}
+.section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted)}
+.section-count{font-size:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:1px 7px;border-radius:10px;font-family:'JetBrains Mono',monospace}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;cursor:default}
+.card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.card-accent{position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0}
+.card.verde .card-accent{background:var(--green)}.card.amarelo .card-accent{background:var(--yellow)}.card.vermelho .card-accent{background:var(--red)}.card.cartao .card-accent{background:var(--blue)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.card-nome{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.chip{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap;margin-left:6px}
+.chip.ok{background:var(--green-dim);color:var(--green)}.chip.warn{background:var(--yellow-dim);color:var(--yellow)}.chip.bad{background:var(--red-dim);color:var(--red)}.chip.neutral{background:var(--blue-dim);color:var(--blue)}
+.card-saldo{font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px}
+.card-saldo.verde{color:var(--green)}.card-saldo.amarelo{color:var(--yellow)}.card-saldo.vermelho{color:var(--red)}
+.card-dias{font-size:11px;color:var(--text-muted);margin-bottom:14px}
+.card-divider{border:none;border-top:1px solid var(--border);margin-bottom:12px}
+.card-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:2px}
+.stat-value{font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--text-dim)}
+.card-alerta{margin-top:10px;font-size:10px;font-weight:600;color:var(--red);background:var(--red-dim);border-radius:6px;padding:5px 8px}
+.estado{text-align:center;padding:80px 20px;color:var(--text-muted)}
+.estado-icon{font-size:40px;margin-bottom:12px}
+.estado-title{font-size:16px;font-weight:600;color:var(--text-dim);margin-bottom:6px}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.topbar{padding:16px 16px 0;flex-direction:column;align-items:flex-start;gap:10px}.kpi-row{grid-template-columns:repeat(2,1fr);padding:16px;gap:8px}.kpi-value{font-size:20px}.content{padding:0 16px 24px}.grid{grid-template-columns:1fr 1fr;gap:8px}.card-saldo{font-size:18px}}
+@media(max-width:480px){.kpi-row{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-name">Oquíron<span>.</span></div>
+    <div class="sidebar-logo-sub">Meta Ads Monitor</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Visão Geral</div>
+    <div class="nav-item active"><span class="nav-icon">◈</span> Saldo das Contas</div>
+    <div class="nav-item" style="opacity:.4;cursor:not-allowed"><span class="nav-icon">◉</span> Relatório Semanal</div>
+    <div class="nav-item" style="opacity:.4;cursor:not-allowed"><span class="nav-icon">◎</span> Performance</div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="update-info">
+      <div><span class="dot"></span>Sistema ativo</div>
+      <div id="sb-update" style="margin-top:4px">Carregando...</div>
+    </div>
+  </div>
+</aside>
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Saldo das Contas</div>
+      <div class="topbar-sub">Boletim diário · Meta Ads</div>
+    </div>
+    <div class="topbar-badge" id="top-date">—</div>
+  </div>
+  <div class="kpi-row" id="kpi-row">
+    <div class="kpi total"><div class="kpi-label">Total Contas</div><div class="kpi-value">—</div></div>
+    <div class="kpi ok"><div class="kpi-label">OK</div><div class="kpi-value ok">—</div></div>
+    <div class="kpi warn"><div class="kpi-label">Críticos</div><div class="kpi-value warn">—</div></div>
+    <div class="kpi bad"><div class="kpi-label">Esgotados</div><div class="kpi-value bad">—</div></div>
+    <div class="kpi neu"><div class="kpi-label">Gasto no Mês</div><div class="kpi-value" style="font-size:16px">—</div></div>
+  </div>
+  <div class="content" id="conteudo">
+    <div class="estado"><div class="estado-icon">⏳</div><div class="estado-title">Carregando dados...</div></div>
+  </div>
+</main>
+<script>
+const WORKER_URL='https://boletim-saldo-api.super-boat-3c8f.workers.dev/api';
+function fBRL(v){const n=parseFloat(v)||0;return'R$ '+n.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+function fDate(iso){if(!iso)return'—';return new Date(iso).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function crit(c){if(c.modelo==='cartao'){return(parseFloat(c.media_diaria)===0&&parseFloat(c.gasto_mes)>0)?'vermelho':'cartao'}if(parseFloat(c.saldo_disponivel)===0)return'vermelho';if(c.dias_restantes!==null&&c.dias_restantes<=0)return'vermelho';if(c.dias_restantes!==null&&c.dias_restantes<=5)return'amarelo';return'verde'}
+function chipHTML(cr){const map={verde:['ok','✓ OK'],amarelo:['warn','⚠ Crítico'],vermelho:['bad','✕ Esgotado'],cartao:['neutral','💳 Cartão']};const[cls,label]=map[cr]||['neutral',cr];return`<span class="chip ${cls}">${label}</span>`}
+function diasLabel(c){if(c.modelo==='cartao'){if(parseFloat(c.media_diaria)===0&&parseFloat(c.gasto_mes)>0)return'🚨 Conta parada — investigar';return c.forma_pagamento||'Cartão cadastrado'}if(c.dias_restantes===-1||c.dias_restantes===null)return'⏸ Sem atividade nos últimos 7 dias';if(parseFloat(c.saldo_disponivel)===0)return'⛔ Saldo esgotado';if(c.dias_restantes<=0)return'🚨 Saldo insuficiente (< 1 dia)';return`${c.dias_restantes} dias restantes de saldo`}
+function saldoClass(cr){if(cr==='vermelho')return'vermelho';if(cr==='amarelo')return'amarelo';return'verde'}
+function renderCard(c){const cr=crit(c);const isPre=c.modelo!=='cartao';const sc=saldoClass(cr);const alerta=cr==='vermelho'&&c.modelo==='cartao'?'<div class="card-alerta">🚨 Conta parada — verificar campanhas</div>':'';return`<div class="card ${cr}"><div class="card-accent"></div><div class="card-top"><div class="card-nome">${c.cliente}</div>${chipHTML(cr)}</div>${isPre?`<div class="card-saldo ${sc}">${fBRL(c.saldo_disponivel)}</div>`:''}<div class="card-dias">${diasLabel(c)}</div><hr class="card-divider"><div class="card-stats"><div><div class="stat-label">Média 7d</div><div class="stat-value">${fBRL(c.media_diaria)}/dia</div></div><div><div class="stat-label">Gasto no Mês</div><div class="stat-value">${fBRL(c.gasto_mes)}</div></div></div>${alerta}</div>`}
+function renderKPI(clientes){const total=clientes.length;const ok=clientes.filter(c=>crit(c)==='verde'||crit(c)==='cartao').length;const criticos=clientes.filter(c=>crit(c)==='amarelo').length;const esgotados=clientes.filter(c=>crit(c)==='vermelho').length;const gasto=clientes.reduce((s,c)=>s+(parseFloat(c.gasto_mes)||0),0);document.getElementById('kpi-row').innerHTML=`<div class="kpi total"><div class="kpi-label">Total Contas</div><div class="kpi-value">${total}</div></div><div class="kpi ok"><div class="kpi-label">OK</div><div class="kpi-value ok">${ok}</div></div><div class="kpi warn"><div class="kpi-label">Críticos</div><div class="kpi-value warn">${criticos}</div></div><div class="kpi bad"><div class="kpi-label">Esgotados</div><div class="kpi-value bad">${esgotados}</div></div><div class="kpi neu"><div class="kpi-label">Gasto no Mês</div><div class="kpi-value" style="font-size:15px;color:var(--text)">${fBRL(gasto)}</div></div>`}
+async function load(){try{const res=await fetch(WORKER_URL);const data=await res.json();if(data.error){document.getElementById('conteudo').innerHTML='<div class="estado"><div class="estado-icon">📭</div><div class="estado-title">Sem dados disponíveis</div><div>O boletim ainda não foi executado hoje.</div></div>';return}const clientes=data.clientes||[];const updated=fDate(data.ultima_atualizacao);document.getElementById('top-date').textContent=updated;document.getElementById('sb-update').textContent=updated;renderKPI(clientes);const ordem={vermelho:0,amarelo:1,verde:2,cartao:3};const prepago=clientes.filter(c=>c.modelo!=='cartao').sort((a,b)=>ordem[crit(a)]-ordem[crit(b)]);const cartao=clientes.filter(c=>c.modelo==='cartao').sort((a,b)=>ordem[crit(a)]-ordem[crit(b)]);let html='';if(prepago.length){html+=`<div class="section-header"><div class="section-title">Pré-pago</div><span class="section-count">${prepago.length}</span></div><div class="grid">${prepago.map(renderCard).join('')}</div>`}if(cartao.length){html+=`<div class="section-header"><div class="section-title">Cartão</div><span class="section-count">${cartao.length}</span></div><div class="grid">${cartao.map(renderCard).join('')}</div>`}document.getElementById('conteudo').innerHTML=html}catch(e){document.getElementById('conteudo').innerHTML=`<div class="estado"><div class="estado-icon">⚠️</div><div class="estado-title">Erro ao carregar</div><div>${e.message}</div></div>`}}
+load();setInterval(load,5*60*1000);
+</script>
+</body>
+</html>
